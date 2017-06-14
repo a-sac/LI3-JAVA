@@ -1,0 +1,3 @@
+*.tex linguist-language=Java
+*.xml linguist-language=Java
+*.sh  linguist-language=Java

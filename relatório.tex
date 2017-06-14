@@ -1,0 +1,332 @@
+\documentclass{article}
+\usepackage[portuguese]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[labelformat=empty]{caption}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{subcaption}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{float}
+\usepackage{textcomp}
+
+\definecolor{solarized@base03}{HTML}{002B36}
+\definecolor{solarized@base02}{HTML}{073642}
+\definecolor{solarized@base01}{HTML}{586e75}
+\definecolor{solarized@base00}{HTML}{657b83}
+\definecolor{solarized@base0}{HTML}{839496}
+\definecolor{solarized@base1}{HTML}{93a1a1}
+\definecolor{solarized@base2}{HTML}{EEE8D5}
+\definecolor{solarized@base3}{HTML}{FDF6E3}
+\definecolor{solarized@yellow}{HTML}{B58900}
+\definecolor{solarized@orange}{HTML}{CB4B16}
+\definecolor{solarized@red}{HTML}{DC322F}
+\definecolor{solarized@magenta}{HTML}{D33682}
+\definecolor{solarized@violet}{HTML}{6C71C4}
+\definecolor{solarized@blue}{HTML}{268BD2}
+\definecolor{solarized@cyan}{HTML}{2AA198}
+\definecolor{solarized@green}{HTML}{859900}
+
+
+\lstset{
+  language=Java,
+  upquote=true,
+  columns=fixed,
+  tabsize=2,
+  extendedchars=true,
+  breaklines=true,
+  numbers=left,
+  numbersep=5pt,
+  rulesepcolor=\color{solarized@base03},
+  numberstyle=\tiny\color{solarized@base01},
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{solarized@green},
+  stringstyle=\color{solarized@yellow}\ttfamily,
+  identifierstyle=\color{solarized@blue},
+  commentstyle=\color{solarized@base01},
+  emphstyle=\color{solarized@red}
+} % Especificar Haskell, mudar de linha quando acabar espaço, diminuir tamanho da letra.
+\usepackage{indentfirst} %Identação nos parágrafos iniciais
+%\graphicspath{ {/home/jessica/Documentos/Engineer/Geocaching-Java} }
+
+
+%\author{no realizado por :P}
+\title{LI3 Java}
+\date{Junho 2017}
+
+
+\begin{document}
+ 	\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+
+\textsc{\LARGE Universidade do Minho}\\[1.5cm] % Name of your university/college
+\textsc{\Large MIEI - Grupo 49}\\[0.5cm] % Major heading such as course name
+\textsc{\large Laboratórios de Informática 3}\\[0.5cm] % Minor heading such as course title
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Projeto Java LI3}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+
+\begin{figure}[!htb]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{sergio.png}
+  \caption{Sérgio Alves A78296}
+  \label{fig:sub6}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{hugo.png}
+  \caption{Hugo Brandão A78582}
+  \label{fig:sub7}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.5\linewidth]{tiago.png}
+  \caption{Tiago Alves A78218}
+  \label{fig:sub8}
+\end{subfigure}
+\label{fig:test3}
+\end{figure}
+
+	\end{titlepage}
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introdução}
+\par Este relatório explica como foi feita a implementação do mesmo projeto realizado na primeira parte desta disciplina, desta feita na linguagem de programação Java.
+\par O projeto consistia numa implementação que permita analisar os artigos presentes em backups da Wikipedia, e retirar desses artigos todos os dados necessários para responder a uma lista de queries dada pelos professores. Contudo, tornou-se mais simples de realizar já com a parte C elaborada.
+\par Para isto, tínhamos de criar estruturas de dados para armazenar toda a informação, e depois de carregada, estaríamos então em condições para executar as queries.
+\par Dito isto, neste relatório são explicadas as nossas decisões tomadas para a elaboração deste projeto de Laboratórios de Informática,
+
+\clearpage
+
+\section{Desenho da Solução}
+\par Para esta segunda parte do trabalho, e para responder corretamente às queries pretendidas, optámos por uma implementação simples mas eficiente. Dividimos o trabalho por módulos, ou seja, separamos o código por pequenos pedaços reutilizáveis de tal forma que seja fácil tanto reaproveitar estes pedaços de código, como fazer a manutenção sem que tenha impacto direto nos outros. Deste modo, a programação torna-se mais inteligente e menos suscetível a erros.
+\par Na nossa implementação temos 5 classes fundamentais, sendo elas a \emph{Parser}, que realiza o parse de todos os ficheiros, fornecidos pela equipa docente, para a nossa estrutura de dados, a \emph{Article}, que guarda toda a informação necessária de um artigo, a \emph{Revision}, com os dados de cada revisão, a \emph{Contributor}, relativamente a cada contribuidor, e a \emph{Structure}. A classe \emph{Structure} define as estruturas onde vão ser guardadas todas as informações que queremos sobre os artigos. Nesta, utilizámos dois \emph{TreeMap}, sendo um para os artigos e outro para os contribuidores. Optámos por esta decisão, devido às condições que um \emph{TreeMap} nos oferece. Temos uma "chave", que é o id de cada artigo, associada ao respetivo artigo. Quando for necessário procurar por um deles, por exemplo, na query \emph{contributor\_name}, basta aceder à estrutura e fazer o "get(contributor\_id)", em que contributor\_id corresponde ao id do contribuidor pretendido, e temos imediatamente a resposta desejada, com o retornar do nome desse contribuidor. O mesmo se aplica à escolha da estrututra para os artigos. Além disto, utilizámos um inteiro que nos dá o total de artigos nos \emph{snapshots}.
+\par Em relação ao \emph{parser} escolhemos \emph{stax}, pois é de simples implementaão, com código legível, e com alguma rapidez na sua execução. Quanto à resolução das queries, foram feitas praticamente todas elas com recurso a streams, o que torna a solução rápida e eficaz.
+
+\clearpage
+
+\section{Classes}
+Na seguinte secção vamos explicar as classes que decidimos criar para a resolução do projeto, incluindo diagramas e explicação das estruturas escolhidas para cada classe.
+
+\subsection{Article}
+\par Para cada artigo é necessário guardar toda a sua informação, mais concretamente, o seu id, o número de revisões que cada artigo tem, e uma estrutura para guardar todas as revisões. Para esta última, utilizámos um \emph{TreeSet} proporcionando assim uma pesquisa rápida.
+
+\begin{lstlisting}
+public class Article{
+    private int nrevisions;           	/* Numero de revisoes do artigo */
+    private long id;                    /* O id do artigo */
+    private TreeSet<Revision> revList;  /* Lista de revisoes */
+    ...
+}
+\end{lstlisting}
+
+\subsection{Revision}
+\par Esta classe guarda tudo o que é necessário sabermos sobre uma revisão de um dado artigo. Aqui guardamos o seu id, o id do contribuidor dessa revisão, o título, data, número de palavras e número de carateres.
+\par É uma classe simples, legível mas de grande importância para s execução correta deste projeto.
+
+\begin{lstlisting}
+public class Revision{
+    private long id;             /* id of the revision */
+    private long idcontributor;  /* id of the contributor that wrote the */
+    private String title;        /* title of the revision */
+    private String date;         /* date of the creation of the revisions */
+    private int nwords;      /* number of words of the revision's article */
+    private int nchars;      /* number of characters of the revison's article */
+}
+\end{lstlisting}
+
+\clearpage
+
+\subsection{Contributor}
+\par Aqui, estão todos os dados de um contribuidor, sendo eles o seu id, o número de contribuições que realizou em todos os artigos que nos foram fornecidos, e o seu nome.
+\par Implementámos um método \emph{compareNContributions} que é útil para o comparador de contribuidores, chamado na query \emph{top\_10\_contributors}.
+
+\begin{lstlisting}
+public class Contributor{
+  private long id;                  /* id do contribuidor */
+  private int ncontributions;   /* Numero de contribuicoes */
+  private String name;              /* Nome do contribuidor */
+}
+\end{lstlisting}
+\subsection{Structure}
+\par Esta é a classe principal do projeto. Aqui é guardada a informação de todos os artigos, revisões e contribuidores. Tal como foi dito acima, na secção \emph{Desenho da solução}, usámos um \emph{TreeMap} para os artigos, e um outro para os contribuidores.
+\par O método fundamental aqui é o \emph{insert}, que faz exatamente o que o nome diz, isto é, insere toda a informação nas estruturas, artigos para o \emph{articles} e contribuidores para o \emph{contributors}. Desta forma, bastava apenas, nas queries, aceder a esta classe e implementar algoritmos para solucioná-las.
+
+\begin{lstlisting}
+public class Structure{
+    private int allArticles;                /* Numero total de artigos */
+    private Map<Long,Article> articles;         /* Lista de artigos */
+    private Map<Long,Contributor> contributors; /* Lista de contribuidores */
+}
+\end{lstlisting}
+
+\subsection{QueryEngineImpl}
+\par Nesta classe está toda a resolução das queries pretendidas. Optámos por, na maior parte, usar streams. Esta escolha deve-se ao facto de, desta forma, a execução tornar-se mais rápida e eficiente. \emph{All\_Revisions}, \emph{Top\_10\_Contributors}, \emph{Top\_20\_Largest\_Articles}, \emph{Top\_N\_Articles\_With\_More\_Words}, e \emph{Titles\_With\_Prefix} foram implementadas com streams. As restantes, não sendo feitas desta forma, foram igualmente elaboradas de modo que a sua execução fosse também eficiente.
+
+\begin{lstlisting}
+public long all_revisions() {
+  try{
+    return this.struct.getArticles().values().stream()
+    								.mapToLong(Article :: getNRevisions)
+    								.sum();
+  }catch(NoArticlesException e){System.out.println("Sem artigos");}
+  return 0;
+}
+\end{lstlisting}
+
+\clearpage
+
+\subsection{ArticleCharComparator}
+\par Esta class serve principalmente para ordenar um artigo segundo o número de carateres da revisão mais recente. É necessário para a query \emph{top\_twenty\_Largest\_Articles}, como se pode ver no excerto de código abaixo. Ordenamos a stream de artigos através deste comparador, obtendo uma stream ordenada como pretendíamos.
+
+\begin{lstlisting}
+public ArrayList<Long> top_20_largest_articles() {
+  ArrayList<Long> top_twenty_ids = new ArrayList<Long>(20);
+  try{
+   this.struct.getArticles().values()
+   							.stream()
+                            .sorted(new ArticleCharComparator())
+                            .limit(20)
+                            .forEach(a -> top_twenty_ids.add((a.getId())));
+  }catch(NoArticlesException e){System.out.println("Sem artigos");}
+  return top_twenty_ids;
+}
+\end{lstlisting}
+
+\subsection{ArticleWordComparator}
+\par Do modo que funciona a classe anterior, o mesmo se aplica a esta, mas em vez de ordenar por número de carateres, ordena por número de palavras. Esta classe é aplicável na query \emph{top\_N\_Articles\_With\_More\_Words}.
+
+\begin{lstlisting}
+public ArrayList<Long> top_N_articles_with_more_words(int n) {
+  ArrayList<Long> top_n_ids = new ArrayList<Long>(n);
+  try{
+   this.struct.getArticles().values().stream()
+                                     .sorted(new ArticleWordComparator())
+                                     .limit(n)
+                                     .forEach(a -> top_n_ids.add((a.getId())));
+
+  }catch(NoArticlesException e){System.out.println("Sem artigos");}
+  return top_n_ids;   }
+\end{lstlisting}
+\begin{lstlisting}
+public class ArticleWordComparator implements Comparator<Article> {
+  public int compare(Article a1, Article a2){
+    return  Integer.valueOf(a2.getBiggestRevision()
+  							  .getNWords()).compareTo(Integer.valueOf(a1
+    						  .getBiggestRevision().getNWords()));
+    }
+}
+\end{lstlisting}
+
+\clearpage
+
+\subsection{ContributorComparator}
+\par Para resolver a query dos 10 contribuidores com mais contribuições, criámos um comparador de contribuidores, sendo este comparador invocado para ordenar uma stream de estes mesmos. A ordenação é feita segundo o número de contribuições de cada contribuidor. Uma vez com a stream ordenada, bastou-nos fazer "limit(10)" e imprimir os resultados.
+
+\begin{lstlisting}
+public class ContributorComparator implements Comparator<Contributor>{
+  public int compare(Contributor c1, Contributor c2){
+    return c1.compareNContributions(c2);
+  }
+}
+\end{lstlisting}
+
+\subsection{RevisionComparator}
+\par Mais uma vez, esta classe é usada para ajudar na realização de uma das queries, desta feita a \emph{Titles\_With\_Prefix}. O objetivo é ordenar a stream de revisões por título(ordem alfabética). Obviamente, são filtradas as revisões cujo título tem como prefixo a string passada como argumento.
+
+\begin{lstlisting}
+public class RevisionComparator implements Comparator<Revision> {
+    public int compare(Revision r1, Revision r2){
+        return r1.getDate().compareTo(r2.getDate());
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+public ArrayList<String> titles_with_prefix(String prefix) {
+  ArrayList<String> res = new ArrayList<String>();
+  try{
+    this.struct.getArticles().values()
+    						 .stream()
+                             .map(Article::getRecentRevision)
+                             .filter(r -> r.getTitle().startsWith(prefix))
+                             .map(Revision::getTitle)
+                             .sorted(new RevisionTitleComparator())
+                             .forEach(title -> res.add(title));
+  }catch(NoArticlesException e){System.out.println("Sem artigos");}
+  return res;
+}
+\end{lstlisting}
+
+\clearpage
+
+\subsection{Exceptions}
+\par Como muitas das queries necessitam de ter acesso às estruturas, e visto que essas estruturas podem estar vazias (null), temos que prevenir erros futuros. Para isto, e como se mostra a seguir, criámos exceptions para os artigos, contribuidores e revisões. Quando uma query invocar um método que lançe um destas exceptions, é imprimida uma mensagem de erro.
+
+\subsubsection{NoArticlesException}
+
+\begin{lstlisting}
+public class NoArticlesException extends Exception implements Serializable{
+  public NoArticlesException(){ super(); }
+
+  public NoArticlesException(String message){super(message);}
+}
+\end{lstlisting}
+
+\subsubsection{NoContributorsException}
+
+\begin{lstlisting}
+public class NoContributorsException extends Exception implements Serializable
+{
+  public NoContributorsException(){super();}
+
+  public NoContributorsException(String message){super(message);}
+}
+\end{lstlisting}
+
+\subsubsection{NoRevisionsException}
+\begin{lstlisting}
+public class NoRevisionsException extends Exception implements Serializable
+{
+  public NoRevisionsException(){super();}
+
+  public NoRevisionsException(String message){super(message);}
+}
+\end{lstlisting}
+
+
+
+
+
+
+
+
+
+\clearpage
+
+\section{Conclusão}
+\par Em suma, o trabalho foi realizado com sucesso apesar de alguns percalces. Tivemos de nos adaptar a um novo estilo de paradigma, ser eficazes e implementar as soluções mais ótimas para conseguir uma performance que satisfizesse os objetivos do grupo.
+\par Achamos, no entanto, que este trabalho nos ajudou bastante a entender como a otimização e o processamento de grandes volumes de dados não é igual em todos os paradigmas da programação, tal como os seus cuidados.
+\par Após a conclusão deste trabalho, pensamos que todos os elementos deste grupo saem com uma percepção mais clara do que é ser eficiente na hora de aceder a estruturas de dados e de processar grande quantidade de informação.
+\par Ficamos, então, contentes com o nosso desempenho e com o resultado obtido, acreditando que todos os objetivos foram cumpridos.
+
+
+
+
+
+
+
+
+
+
+\end{document}
